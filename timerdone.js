@@ -1,0 +1,72 @@
+let intervalId = null;
+let remaining = 0;
+
+const display = document.getElementById('display');
+const input = document.getElementById('seconds');
+
+// 카운트다운 실행 함수
+const runTimer = () => {
+    intervalId = setInterval(() => {
+        remaining--;
+
+        if (remaining <= 0) {
+            clearInterval(intervalId);
+            intervalId = null;
+            remaining = 0;
+            display.textContent = '시간 종료!';
+            return;
+        }
+
+        display.textContent = remaining + '초 남음';
+    }, 1000);
+};
+
+// 시작 버튼
+const start = () => {
+    if (intervalId) return; // 이미 실행 중이면 무시
+
+    remaining = parseInt(input.value, 10);
+
+    if (isNaN(remaining) || remaining <= 0) {
+        alert('양의 정수를 입력하세요.');
+        return;
+    }
+
+    display.textContent = remaining + '초 남음';
+
+    runTimer();
+};
+
+// 일시정지 버튼
+const pause = () => {
+    if (!intervalId) return; // 실행 중이 아니면 무시
+
+    clearInterval(intervalId);
+    intervalId = null;
+
+    display.textContent = remaining + '초 남음';
+};
+
+// 재개 버튼
+const resume = () => {
+    if (intervalId) return; // 이미 실행 중이면 무시
+    if (remaining <= 0) return; // 남은 시간이 없으면 재개 불가
+
+    display.textContent = remaining + '초 남음';
+
+    runTimer();
+};
+
+// 초기화 버튼
+const reset = () => {
+    clearInterval(intervalId);
+    intervalId = null;
+    remaining = 0;
+    display.textContent = '대기 중';
+    input.value = '';
+};
+
+document.getElementById('start').addEventListener('click', start);
+document.getElementById('pause').addEventListener('click', pause);
+document.getElementById('resume').addEventListener('click', resume);
+document.getElementById('reset').addEventListener('click', reset);
